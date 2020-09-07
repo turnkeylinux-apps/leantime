@@ -1,0 +1,8 @@
+#!/bin/bash -e
+# set leantime admin password & email
+
+. /etc/default/inithooks
+
+[ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
+
+$INITHOOKS_PATH/bin/leantime.py --pass="$APP_PASS" --email="$APP_EMAIL"

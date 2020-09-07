@@ -1,0 +1,42 @@
+#!/bin/bash -ex
+
+DB_NAME=leantime
+DB_USER=leantime
+DB_PASS=$(mcookie)
+
+ADMIN_MAIL="admin%40example.com" # '@' encoded = '%40'
+ADMIN_PASS=turnkey1
+
+SRC=/usr/local/src
+WEBROOT=/var/www/leantime
+CONF=$WEBROOT/config/configuration.php
+
+tar oxf $SRC/Leantime-v*.tar.gz -C $(dirname $WEBROOT)
+rm -f $SRC/Leantime-v*.tar.gz
+mv $(basename$WEBROOT)/Leantime* $WEBROOT
+cp $(dirname $CONF)/configuration.sample.php $CONF
+chown -R www-data:www-data $WEBROOT
+
+service mysql start
+
+mysqladmin create $DB_NAME
+mysql --batch --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost identified by '$DB_PASS'; flush privileges;"
+
+sed -i "\|\$sitename =|s|=.*|= \"TurnKey Leantime\";|" $CONF
+sed -i "\|\$dbUser=|s|=.*|=\"$DB_USER\";|" $CONF
+sed -i "\|\$dbPassword=|s|=.*|=\"$DB_PASS\";|" $CONF
+sed -i "\|\$dbDatabase=|s|=.*|=\"$DB_NAME\";|" $CONF
+sed -i "\|\$sessionpassword =|s|=.*|=\"$(mcookie)($mcookie)\";|" $CONF
+
+a2dissite 000-default
+a2ensite leantime
+a2enmod rewrite
+
+service apache2 start
+
+CURL="curl -c /tmp/cookie -b /tmp/cookie"
+$CURL localhost/install\ \
+  --data-raw "email=$ADMIN_MAIL&password=$ADMIN_PASS&firstname=Admin&lastname=User&company=TurnKey&install=Install"
+
+service mysql stop
+service apache2 stop
