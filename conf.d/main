@@ -13,7 +13,7 @@ CONF=$WEBROOT/config/configuration.php
 
 tar oxf $SRC/Leantime-v*.tar.gz -C $(dirname $WEBROOT)
 rm -f $SRC/Leantime-v*.tar.gz
-mv $(basename$WEBROOT)/Leantime* $WEBROOT
+mv $(dirname $WEBROOT)/Leantime* $WEBROOT
 cp $(dirname $CONF)/configuration.sample.php $CONF
 chown -R www-data:www-data $WEBROOT
 
@@ -35,8 +35,11 @@ a2enmod rewrite
 service apache2 start
 
 CURL="curl -c /tmp/cookie -b /tmp/cookie"
-$CURL localhost/install\ \
+$CURL localhost/install \
   --data-raw "email=$ADMIN_MAIL&password=$ADMIN_PASS&firstname=Admin&lastname=User&company=TurnKey&install=Install"
+
+# Disable install page - see https://github.com/Leantime/leantime/issues/335
+sed -i "\| \^install|s|^|#|" $WEBROOT/public/.htaccess
 
 service mysql stop
 service apache2 stop
