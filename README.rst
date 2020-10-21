@@ -1,9 +1,10 @@
-Leantime 
-==============================
+Leantime - Project Management System
+====================================
 
-Leantime_ is a lean open source project management system for
-startups and innovators written in PHP, Javascript with MySQL.
-Designed to help you manage your projects from ideation to delivery.
+Leantime_ is a lean, open source project management system for
+startups and innovators. It's written in PHP, Javascript; backed by a MySQL
+(MariaDB) database. Designed to help you manage your projects from ideation
+to delivery.
 
 Features:
 
@@ -24,7 +25,6 @@ Leantime includes all the standard features in `TurnKey Core`_, and on
 top of that:
 
 - SSL support out of the box.
-
 - `Adminer`_ administration frontend for MySQL (MariaDB) (listening on port
   12322 - uses SSL).
 - `Postfix`_ MTA (bound to localhost) to allow sending of email.
