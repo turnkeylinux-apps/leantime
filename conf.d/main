@@ -26,7 +26,7 @@ sed -i "\|\$sitename =|s|=.*|= \"TurnKey Leantime\";|" $CONF
 sed -i "\|\$dbUser=|s|=.*|=\"$DB_USER\";|" $CONF
 sed -i "\|\$dbPassword=|s|=.*|=\"$DB_PASS\";|" $CONF
 sed -i "\|\$dbDatabase=|s|=.*|=\"$DB_NAME\";|" $CONF
-sed -i "\|\$sessionpassword =|s|=.*|=\"$(mcookie)($mcookie)\";|" $CONF
+sed -i "\|\$sessionpassword =|s|=.*|=\"$(mcookie)$(mcookie)\";|" $CONF
 
 a2dissite 000-default
 a2ensite leantime
