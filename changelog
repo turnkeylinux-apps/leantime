@@ -1,3 +1,12 @@
+turnkey-leantime-16.1 (1) turnkey; urgency=low
+
+  * Upgrade Leantime: v2.1.4
+
+  * Note: Please refer to turnkey-core's 16.1 changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Stefan Davis <stefan@turnkeylinux.org>  Mon, 26 Apr 2021 15:49:05 +1000
+
 turnkey-leantime-16.0 (1) turnkey; urgency=low
 
   * Initial release includes Leantime - v2.1.4; installed from tarball;

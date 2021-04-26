@@ -2,3 +2,4 @@
 #include <turnkey/lamp>
 
 python3-bcrypt
+php-mbstring
