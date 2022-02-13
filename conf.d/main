@@ -13,7 +13,7 @@ CONF=$WEBROOT/config/configuration.php
 
 tar oxf $SRC/Leantime-v*.tar.gz -C $(dirname $WEBROOT)
 rm -f $SRC/Leantime-v*.tar.gz
-mv $(dirname $WEBROOT)/Leantime* $WEBROOT
+mv $(dirname $WEBROOT)/leantime* $WEBROOT
 cp $(dirname $CONF)/configuration.sample.php $CONF
 chown -R www-data:www-data $WEBROOT
 
@@ -28,7 +28,9 @@ sed -i "\|\$dbPassword=|s|=.*|=\"$DB_PASS\";|" $CONF
 sed -i "\|\$dbDatabase=|s|=.*|=\"$DB_NAME\";|" $CONF
 sed -i "\|\$sessionpassword =|s|=.*|=\"$(mcookie)$(mcookie)\";|" $CONF
 
+
 a2dissite 000-default
+a2enmod headers
 a2ensite leantime
 a2enmod rewrite
 
