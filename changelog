@@ -1,3 +1,11 @@
+turnkey-leantime-17.2 (1) turnkey; urgency=low
+
+  * Upgrade Leantime: v2.2.11 - closes #1784.
+
+  * Include PHP 8.1 (from sury.org) - PHP 8.0+ required for Leantime v2.2.0+.
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Wed, 07 Dec 2022 04:37:16 +0000
+
 turnkey-leantime-17.1 (1) turnkey; urgency=low
 
   * Updated all Debian packages to latest.
