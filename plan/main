@@ -1,5 +1,5 @@
 #include <turnkey/base>
-#include <turnkey/lamp>
+#include <turnkey/lamp81>
 
 python3-bcrypt
-php-mbstring
+php8.1-mbstring
