@@ -1,3 +1,11 @@
+turnkey-leantime-17.3 (1) turnkey; urgency=low
+
+  * Upgrade Leantime: v2.3.11.
+
+  * Rebuild to include updated dependncies.
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Thu, 23 Feb 2023 00:13:55 +0000
+
 turnkey-leantime-17.2 (1) turnkey; urgency=low
 
   * Upgrade Leantime: v2.2.11 - closes #1784.
