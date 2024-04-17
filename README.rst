@@ -24,6 +24,15 @@ Features:
 Leantime includes all the standard features in `TurnKey Core`_, and on
 top of that:
 
+- Leantime installed from upstream source code to /var/www/leantime
+
+  **Security note**: Updates to Leantime may require supervision so they
+  **ARE NOT** automated.
+
+  To update Leantime, please see `Leantime's notes`_. If you have troubles,
+  please post in `our forums`_ (`sign up for a new account`_ if you don't
+  have one - include your questions there too if you want).
+
 - SSL support out of the box.
 - `Adminer`_ administration frontend for MySQL (MariaDB) (listening on port
   12322 - uses SSL).
@@ -41,5 +50,8 @@ Credentials *(passwords set at first boot)*
 
 .. _Leantime: https://leantime.io/
 .. _TurnKey Core: https://www.turnkeylinux.org/core
+.. _Leantime's notes: https://github.com/leantime/leantime/?tab=readme-ov-file#-update
+.. _our forums: https://www.turnkeylinux.org/forum/support
+.. _sign up for a new account: https://www.turnkeylinux.org/user/register
 .. _Adminer: https://www.adminer.org/
 .. _Postfix: https://www.postfix.org/

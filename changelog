@@ -1,3 +1,19 @@
+turnkey-leantime-18.1 (1) turnkey; urgency=low
+
+  * Update Leantime to latest upstream version: v3.1.1 - closes #1930.
+
+  * Ensure build code & inithooks only use single quotes in configuration.php
+    - eases end user Leantime updates - closes #1911.
+
+  * Confconsole: bugfix broken DNS-01 Let's Encrypt challenge- closes #1876 &
+    #1895.
+    [Jeremy Davis <jeremy@turnkeylinux.org>]
+
+  * Web management console (webmin):
+    - Replace webmin-shell with webmin-xterm module by default - closes #1904.
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Mon, 15 Apr 2024 04:25:27 +0000
+
 turnkey-leantime-18.0 (1) turnkey; urgency=low
 
   * Upgraded Leantime: v3.0.3.

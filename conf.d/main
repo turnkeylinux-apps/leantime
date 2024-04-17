@@ -22,15 +22,15 @@ service mysql start
 mysqladmin create $DB_NAME
 mysql --batch --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost identified by '$DB_PASS'; flush privileges;"
 
-sed -i "\|\$sitename =|s|=.*|= \"TurnKey Leantime\";|" $CONF
-sed -i "\|\$dbUser =|s|=.*|=\"$DB_USER\";|" $CONF
-sed -i "\|\$dbPassword =|s|=.*|=\"$DB_PASS\";|" $CONF
-sed -i "\|\$dbDatabase =|s|=.*|=\"$DB_NAME\";|" $CONF
-sed -i "\|\$sessionpassword =|s|=.*|=\"$(mcookie)$(mcookie)\";|" $CONF
+sed -i "\|\$sitename =|s|=.*|= 'TurnKey Leantime';|" $CONF
+sed -i "\|\$dbUser =|s|=.*|= '$DB_USER';|" $CONF
+sed -i "\|\$dbPassword =|s|=.*|= '$DB_PASS';|" $CONF
+sed -i "\|\$dbDatabase =|s|=.*|= '$DB_NAME';|" $CONF
+sed -i "\|\$sessionpassword =|s|=.*|= '$(mcookie)$(mcookie)';|" $CONF
 
 a2dissite 000-default
-a2enmod headers
 a2ensite leantime
+a2enmod headers
 a2enmod rewrite
 
 service apache2 start
@@ -38,9 +38,6 @@ service apache2 start
 CURL="curl -c /tmp/cookie -b /tmp/cookie"
 $CURL localhost/install \
   --data-raw "email=$ADMIN_MAIL&password=$ADMIN_PASS&firstname=Admin&lastname=User&company=TurnKey&install=Install"
-
-# Disable install page - see https://github.com/Leantime/leantime/issues/335
-sed -i "\| \^install|s|^|#|" $WEBROOT/public/.htaccess
 
 service mysql stop
 service apache2 stop
