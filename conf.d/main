@@ -11,9 +11,9 @@ SRC=/usr/local/src
 WEBROOT=/var/www/leantime
 CONF=$WEBROOT/config/configuration.php
 
-tar oxf $SRC/Leantime-v*.tar.gz -C $(dirname $WEBROOT)
+mkdir $WEBROOT
+tar oxf $SRC/Leantime-v*.tar.gz -C $WEBROOT
 rm -f $SRC/Leantime-v*.tar.gz
-[[ -d "$WEBROOT" ]] || mv $(dirname $WEBROOT)/leantime* $WEBROOT
 cp $(dirname $CONF)/configuration.sample.php $CONF
 chown -R www-data:www-data $WEBROOT
 
