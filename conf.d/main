@@ -36,8 +36,12 @@ a2enmod rewrite
 service apache2 start
 
 CURL="curl -c /tmp/cookie -b /tmp/cookie"
-$CURL localhost/install \
-  --data-raw "email=$ADMIN_MAIL&password=$ADMIN_PASS&firstname=Admin&lastname=User&company=TurnKey&install=Install"
+INSTALL_URL="$($CURL -X POST -s -o /dev/null -w '%{redirect_url}' 'http://localhost/install' --data-raw "email=$ADMIN_MAIL&firstname=Turnkey&lastname=Linux&company=TurnkeyLinux&install=Install")"
+$CURL -X POST "$INSTALL_URL" --data-raw "step=1&name=TurnkeyLinux Leantime&jobTitle=admin&password=$ADMIN_PASS&saveAccount=1&createAccount=Next"
+$CURL -X POST "$INSTALL_URL" --data-raw "step=2&theme=default&themeFont=Roboto&createAccount=Next"
+$CURL -X POST "$INSTALL_URL" --data-raw "step=3&colormode=light&colorscheme=companyColors&createAccount=Next"
+$CURL -X POST "$INSTALL_URL" --data-raw "step=4&daySchedule-workStart-button=8&daySchedule-workStart=0&daySchedule-launch-button=12&daySchedule-launch=0&daySchedule-workEnd-button=16&daySchedule-workEnd=0&createAccount=Next"
+$CURL -X POST "$INSTALL_URL" --data-raw "step=5&complete=1&createAccount=Complete Sign up"
 
 service mysql stop
 service apache2 stop
