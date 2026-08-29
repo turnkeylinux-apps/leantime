@@ -10,12 +10,15 @@ ADMIN_PASS=turnkey1
 SRC=/usr/local/src
 WEBROOT=/var/www/leantime
 CONF=$WEBROOT/config/configuration.php
+VERSION=v3.9.8
+ARCHIVE=$SRC/Leantime-$VERSION.tar.gz
+COOKIE=/run/leantime-install-cookie
 
-mkdir $WEBROOT
-tar oxf $SRC/Leantime-v*.tar.gz -C $WEBROOT
-rm -f $SRC/Leantime-v*.tar.gz
-cp $(dirname $CONF)/configuration.sample.php $CONF
-chown -R www-data:www-data $WEBROOT
+mkdir -p "$WEBROOT"
+tar xf "$ARCHIVE" -C "$WEBROOT" --no-same-owner --no-same-permissions
+rm -f "$ARCHIVE"
+cp "$(dirname "$CONF")/configuration.sample.php" "$CONF"
+chown -R www-data:www-data "$WEBROOT"
 
 service mysql start
 
@@ -35,13 +38,26 @@ a2enmod rewrite
 
 service apache2 start
 
-CURL="curl -c /tmp/cookie -b /tmp/cookie"
-INSTALL_URL="$($CURL -X POST -s -o /dev/null -w '%{redirect_url}' 'http://localhost/install' --data-raw "email=$ADMIN_MAIL&firstname=Turnkey&lastname=Linux&company=TurnkeyLinux&install=Install")"
-$CURL -X POST "$INSTALL_URL" --data-raw "step=1&name=TurnkeyLinux Leantime&jobTitle=admin&password=$ADMIN_PASS&saveAccount=1&createAccount=Next"
-$CURL -X POST "$INSTALL_URL" --data-raw "step=2&theme=default&themeFont=Roboto&createAccount=Next"
-$CURL -X POST "$INSTALL_URL" --data-raw "step=3&colormode=light&colorscheme=companyColors&createAccount=Next"
-$CURL -X POST "$INSTALL_URL" --data-raw "step=4&daySchedule-workStart-button=8&daySchedule-workStart=0&daySchedule-launch-button=12&daySchedule-launch=0&daySchedule-workEnd-button=16&daySchedule-workEnd=0&createAccount=Next"
-$CURL -X POST "$INSTALL_URL" --data-raw "step=5&complete=1&createAccount=Complete Sign up"
+CURL=(curl -c "$COOKIE" -b "$COOKIE")
+INSTALL_URL="$("${CURL[@]}" -X POST -s -o /dev/null -w '%{redirect_url}' 'http://localhost/install' --data-raw "email=$ADMIN_MAIL&firstname=Turnkey&lastname=Linux&company=TurnkeyLinux&install=Install")"
+"${CURL[@]}" -X POST "$INSTALL_URL" --data-raw "step=1&name=TurnkeyLinux Leantime&jobTitle=admin&password=$ADMIN_PASS&saveAccount=1&createAccount=Next"
+"${CURL[@]}" -X POST "$INSTALL_URL" --data-raw "step=2&theme=default&themeFont=Roboto&createAccount=Next"
+"${CURL[@]}" -X POST "$INSTALL_URL" --data-raw "step=3&colormode=light&colorscheme=companyColors&createAccount=Next"
+"${CURL[@]}" -X POST "$INSTALL_URL" --data-raw "step=4&daySchedule-workStart-button=8&daySchedule-workStart=0&daySchedule-launch-button=12&daySchedule-launch=0&daySchedule-workEnd-button=16&daySchedule-workEnd=0&createAccount=Next"
+"${CURL[@]}" -X POST "$INSTALL_URL" --data-raw "step=5&complete=1&createAccount=Complete Sign up"
+
+# Keep application, vendor, and configuration code out of the web service's
+# write boundary. Only documented runtime data paths remain writable.
+chown -R root:root "$WEBROOT"
+find "$WEBROOT" -type d -exec chmod 0755 {} +
+find "$WEBROOT" -type f -exec chmod 0644 {} +
+for runtime_dir in storage userfiles backupdb; do
+    install -d -o www-data -g www-data -m 0750 "$WEBROOT/$runtime_dir"
+    chown -R www-data:www-data "$WEBROOT/$runtime_dir"
+done
+chown root:www-data "$CONF"
+chmod 0640 "$CONF"
+rm -f "$COOKIE"
 
 service mysql stop
 service apache2 stop
