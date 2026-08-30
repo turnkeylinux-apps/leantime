@@ -5,6 +5,7 @@ result=${TKL_TEST_RESULT:?}
 password=${TKL_TEST_APP_PASS:?}
 work=/run/tkl-v19-tests/leantime
 base=https://www.example.com
+admin_email=admin@example.invalid
 curl_args=(-kfsS --resolve www.example.com:443:127.0.0.1)
 mkdir -p "$work"
 
@@ -20,13 +21,14 @@ test -n "$csrf"
 curl "${curl_args[@]}" -b "$work/cookies" -c "$work/cookies" \
     -D "$work/login.headers" -o "$work/login-response.html" \
     --data-urlencode "_token=$csrf" \
-    --data-urlencode username=admin@example.com \
+    --data-urlencode "username=$admin_email" \
     --data-urlencode "password=$password" \
     --data-urlencode redirectUrl=/dashboard/home \
     "$base/auth/login"
 curl "${curl_args[@]}" -b "$work/cookies" "$base/dashboard/home" \
     >"$work/dashboard.html"
 grep -Eqi 'dashboard|project|leantime' "$work/dashboard.html"
+! grep -q 'name="password"' "$work/dashboard.html"
 
 runuser -u www-data -- test ! -w /var/www/leantime/public/index.php
 runuser -u www-data -- test ! -w /var/www/leantime/vendor/autoload.php
@@ -37,11 +39,12 @@ runuser -u www-data -- touch /var/www/leantime/userfiles/.tkl-v19-write-test
 runuser -u www-data -- rm /var/www/leantime/userfiles/.tkl-v19-write-test
 
 mysql -N leantime -e "SELECT username FROM zp_user WHERE id=1" \
-    | grep -Fxq admin@example.com
+    | grep -Fxq "$admin_email"
 systemctl restart mariadb.service apache2.service
 curl "${curl_args[@]}" -b "$work/cookies" "$base/dashboard/home" \
     >"$work/dashboard-after-restart.html"
 grep -Eqi 'dashboard|project|leantime' "$work/dashboard-after-restart.html"
+! grep -q 'name="password"' "$work/dashboard-after-restart.html"
 
 ! grep -F -- "$password" /var/log/inithooks.log
 
